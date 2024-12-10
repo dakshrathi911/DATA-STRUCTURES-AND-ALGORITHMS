@@ -1,0 +1,52 @@
+ struct node* minNode = min(root);
+    printf("Minimum value: %d\n", minNode->data);
+
+    struct node* maxNode = max(root);
+    printf("Maximum value: %d\n", maxNode->data);
+
+    int searchKey = 120;
+    struct node* searchNode = bstsearch(root, searchKey);
+    if(searchNode != NULL){
+        printf("Value %d found in the tree.\n", searchKey);
+    }
+    else{
+        printf("Value %d not found in the tree.\n", searchKey);
+    }
+
+
+
+
+struct node* deleteNode(struct node* root, int x) {
+    struct node* t = search(root, x);
+    if (t == NULL) {
+        return root;
+    }
+    if (t->l == NULL && t->r == NULL) {
+        if (t->father == NULL) {
+            root = NULL;
+        } else if (t == t->father->l) {
+            t->father->l = NULL;
+        } else {
+            t->father->r = NULL;
+        }
+        free(t);
+    } else if (t->l == NULL || t->r == NULL) {
+        struct node* child = (t->l != NULL) ? t->l : t->r;
+        if (t->father == NULL) {
+            root = child;
+        } else if (t == t->father->l) {
+            t->father->l = child;
+        } else {
+            t->father->r = child;
+        }
+        child->father = t->father;
+        free(t);
+    } else {
+        struct node* succ = successor(t);
+        t->val = succ->val;
+        root = deleteNode(root, succ->val);
+    }
+    return root;
+}
+
+/******************************************************************/
